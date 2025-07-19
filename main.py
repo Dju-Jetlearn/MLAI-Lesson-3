@@ -32,6 +32,35 @@ from sklearn import preprocessing
 label_encoder = preprocessing.LabelEncoder()
 
 data["Sex"] = label_encoder.fit_transform(data["Sex"])
-data["Embarked"] = label_encoder.fit_transform(data["Sex"])
+data["Embarked"] = label_encoder.fit_transform(data["Embarked"])
 
 print(data.head())
+
+x = data[["Pclass", "Sex", "Age", "Fare", "Embarked", "TravelAlone"]]
+y = data["Survived"]
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, random_state = 2)
+
+from sklearn.linear_model import LogisticRegression
+
+lr = LogisticRegression()
+
+lr.fit(x_train, y_train)
+
+y_pred = lr.predict(x_test)
+
+import seaborn as sans
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+matrix = confusion_matrix(y_test, y_pred)
+
+sans.heatmap(matrix, annot = True, fmt = "d")
+
+matpat.title("Confusion Matrix")
+matpat.xlabel("Predicted")
+matpat.ylabel("Actual")
+matpat.show()
+acc = accuracy_score(y_test, y_pred)
+print("accuracy = ", round((acc * 100), 2), "%")
